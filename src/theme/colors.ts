@@ -59,6 +59,10 @@ export const colors = {
    */
   background: palette.neutral200,
   /**
+   * The background color for inputs.
+   */
+  backgroundInput: palette.neutral100,
+  /**
    * The default border color.
    */
   border: palette.neutral400,
