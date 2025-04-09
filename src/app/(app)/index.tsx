@@ -1,40 +1,19 @@
 import { observer } from "mobx-react-lite"
-import { Image, ImageStyle, TextStyle, View, ViewStyle } from "react-native"
-import { Screen, Text } from "@/components"
+import { ImageStyle, Text, TextStyle, ViewStyle } from "react-native"
+import { Screen } from "@/components"
 import { isRTL } from "@/i18n"
 import { ThemedStyle } from "@/theme"
-import { useSafeAreaInsetsStyle } from "@/utils/useSafeAreaInsetsStyle"
 import { useAppTheme } from "@/utils/useAppTheme"
-
-const welcomeLogo = require("../../assets/images/logo.png")
-const welcomeFace = require("../../assets/images/welcome-face.png")
+import { useStores } from "@/models"
 
 export default observer(function WelcomeScreen() {
-  const $bottomContainerInsets = useSafeAreaInsetsStyle(["bottom"])
+  const { authStore } = useStores()
   const { theme, themed } = useAppTheme()
-
   return (
     <Screen safeAreaEdges={["top"]} contentContainerStyle={themed($container)}>
-      <View style={themed($topContainer)}>
-        <Image style={themed($welcomeLogo)} source={welcomeLogo} resizeMode="contain" />
-        <Text
-          testID="welcome-heading"
-          style={themed($welcomeHeading)}
-          tx="welcomeScreen:readyForLaunch"
-          preset="heading"
-        />
-        <Text tx="welcomeScreen:exciting" preset="subheading" />
-        <Image
-          style={$welcomeFace}
-          source={welcomeFace}
-          resizeMode="contain"
-          tintColor={theme.isDark ? theme.colors.palette.neutral900 : undefined}
-        />
-      </View>
-
-      <View style={[themed($bottomContainer), $bottomContainerInsets]}>
-        <Text tx="welcomeScreen:postscript" size="md" />
-      </View>
+      <Text>User: {String(authStore.isAuthenticated)}</Text>
+      <Text>Info:</Text>
+      <Text>{JSON.stringify(authStore.user)}</Text>
     </Screen>
   )
 })

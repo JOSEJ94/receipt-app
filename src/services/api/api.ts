@@ -8,6 +8,7 @@
 import { ApisauceInstance, create } from "apisauce"
 import Config from "../../config"
 import type { ApiConfig } from "./api.types"
+import AsyncStorage from "@react-native-async-storage/async-storage"
 
 /**
  * Configuring the apisauce instance.
@@ -37,6 +38,55 @@ export class Api {
         Accept: "application/json",
       },
     })
+    this.apisauce.axiosInstance.interceptors.request.use(async (request) => {
+      const token = await AsyncStorage.getItem("token")
+      if (token) {
+        request.headers.Authorization = `Bearer ${token}`
+      }
+      return request
+    })
+  }
+
+  createAccount = async (username: string, email: string, password: string) => {
+    try {
+      const response: any = await this.apisauce.post("/register", { username, email, password })
+      if (response) {
+        this.apisauce.setHeader("Authorization", `Bearer ${response.data.token}`)
+        AsyncStorage.setItem("token", response.data.token)
+      }
+      return response.data
+    } catch (error: any) {
+      console.error("Error creating account", error)
+      throw error
+    }
+  }
+
+  login = async (email: string, password: string) => {
+    try {
+      const response: any = await this.apisauce.post("/login", { email, password })
+      if (response) {
+        this.apisauce.setHeader("Authorization", `Bearer ${response.data.token}`)
+        AsyncStorage.setItem("token", response.data.token)
+      }
+      return response.data.token
+    } catch (error: any) {
+      console.error("Error logging in", error)
+      throw error
+    }
+  }
+
+  logout = () => {
+    this.apisauce.setHeader("Authorization", "")
+  }
+
+  getProfile = async () => {
+    try {
+      const response: any = await this.apisauce.get("/profile")
+      return response.data
+    } catch (error: any) {
+      console.error("Error getting profile", error)
+      throw error
+    }
   }
 }
 
