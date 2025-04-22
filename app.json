@@ -14,9 +14,7 @@
     },
     "newArchEnabled": true,
     "jsEngine": "hermes",
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "android": {
       "icon": "./assets/images/app-icon-android-legacy.png",
       "package": "com.jrojas.receiptapp",
@@ -49,7 +47,13 @@
           "backgroundColor": "#191015"
         }
       ],
-      "expo-router"
+      "expo-router",
+      [
+        "react-native-vision-camera",
+        {
+          "cameraPermissionText": "$(PRODUCT_NAME) needs access to your Camera."
+        }
+      ]
     ],
     "experiments": {
       "tsconfigPaths": true,
