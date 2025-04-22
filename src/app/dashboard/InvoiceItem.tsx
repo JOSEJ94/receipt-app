@@ -2,27 +2,27 @@ import { View, Text, Image, ListRenderItemInfo, StyleSheet } from "react-native"
 import React, { useMemo } from "react"
 import { InvoiceType } from "@/models/InvoiceModel"
 
-const InvoiceItem = (info: ListRenderItemInfo<InvoiceType>) => {
+interface InvoiceItemProps {
+  item: InvoiceType
+}
+
+const InvoiceItem = ({ item }: InvoiceItemProps) => {
   const styles = useMemo(() => createStyles(), [])
-  const formattedDate = new Date(info.item.date).toLocaleDateString("en-US", {
+  const formattedDate = new Date(item.date).toLocaleDateString("en-US", {
     year: "numeric",
     month: "short",
     day: "2-digit",
   })
   const formattedTotal = new Intl.NumberFormat("en-US", {
     style: "currency",
-    currency: info.item.currencyCode,
-  }).format(info.item.total!)
+    currency: item.currencyCode,
+  }).format(item.total!)
   return (
     <View style={styles.container}>
-      <Image
-        source={{ uri: info.item.vendorLogo }}
-        resizeMode="contain"
-        style={styles.vendorImage}
-      />
+      <Image source={{ uri: item.vendorLogo }} resizeMode="contain" style={styles.vendorImage} />
       <View style={styles.informationContainer}>
         <Text>{formattedDate}</Text>
-        <Text>{info.item.vendorCategory}</Text>
+        <Text>{item.vendorCategory}</Text>
       </View>
       <Text style={styles.price}>{formattedTotal}</Text>
     </View>
