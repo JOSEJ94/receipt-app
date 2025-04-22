@@ -19,9 +19,9 @@ const AuthStore = types
         console.error("Failed to create account", error)
       }
     }),
-    login: flow(function* (username: string, password: string) {
+    login: flow(function* (email: string, password: string) {
       try {
-        const response = yield api.login(username, password)
+        const response = yield api.login(email, password)
         console.log("response", response)
         const user = yield api.getProfile()
         console.log("user", user)

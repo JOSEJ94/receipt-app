@@ -41,6 +41,7 @@ export class Api {
     this.apisauce.axiosInstance.interceptors.request.use(async (request) => {
       const token = await AsyncStorage.getItem("token")
       if (token) {
+        console.log("Token found: ", token)
         request.headers.Authorization = `Bearer ${token}`
       }
       return request
@@ -77,6 +78,7 @@ export class Api {
 
   logout = () => {
     this.apisauce.setHeader("Authorization", "")
+    AsyncStorage.removeItem("token")
   }
 
   getProfile = async () => {
@@ -85,6 +87,28 @@ export class Api {
       return response.data
     } catch (error: any) {
       console.error("Error getting profile", error)
+      throw error
+    }
+  }
+
+  uploadInvoice = async (invoiceImage: Base64URLString) => {
+    try {
+      const response: any = await this.apisauce.post("/invoices", invoiceImage)
+      return response.data
+    } catch (error: any) {
+      console.error("Error uploading invoice", error)
+      throw error
+    }
+  }
+
+  getInvoices = async () => {
+    try {
+      const response: any = await this.apisauce.get("/invoices")
+      console.log("response", response)
+
+      return response.data
+    } catch (error: any) {
+      console.error("Error getting invoices", error)
       throw error
     }
   }
